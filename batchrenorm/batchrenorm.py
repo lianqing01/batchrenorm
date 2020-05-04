@@ -11,6 +11,7 @@ class BatchRenorm(torch.jit.ScriptModule):
         eps: float = 1e-3,
         momentum: float = 0.01,
         affine: bool = True,
+        track: bool = True,
     ):
         super().__init__()
         self.register_buffer(
@@ -64,13 +65,14 @@ class BatchRenorm(torch.jit.ScriptModule):
                 / self.running_std.view_as(batch_std)
             ).clamp_(-self.dmax, self.dmax)
             x = (x - batch_mean) / batch_std * r + d
-            self.running_mean += self.momentum * (
-                batch_mean.detach() - self.running_mean
-            )
-            self.running_std += self.momentum * (
-                batch_std.detach() - self.running_std
-            )
-            self.num_batches_tracked += 1
+            if self.track is True:
+                self.running_mean += self.momentum * (
+                    batch_mean.detach() - self.running_mean
+                )
+                self.running_std += self.momentum * (
+                    batch_std.detach() - self.running_std
+                )
+                self.num_batches_tracked += 1
         else:
             x = (x - self.running_mean) / self.running_std
         if self.affine:
