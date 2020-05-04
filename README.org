@@ -11,7 +11,7 @@ Pytorch implementation of Batch Renormalization, introduced in https://arxiv.org
   To install the latest version of this package, run
 
   #+BEGIN_SRC
-    pip install git+https://github.com/ludvb/batchrenorm@master
+    pip install git+https://github.com/lianqing01/batchrenorm@master
   #+END_SRC
 
 * Usage
